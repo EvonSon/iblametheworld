@@ -13,3 +13,93 @@ body {
     color: #000;
   }
   
+#scared-page {
+    font-family: Helvetica, sans-serif;
+    justify-content: center;
+    text-align: center;
+    height: 100vh;
+    margin: 0;
+    padding: 20px;
+    background-color: #ffffff;
+}
+
+#scared-page h1 {
+    font-size: 4rem;
+    color: #000;
+}
+
+#scared-page .search-bar {
+    position: absolute;
+    bottom: 10%;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 60%;
+    max-width: 500px;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 25px;
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+#scared-page .search-bar input {
+    flex-grow: 1;
+    border: none;
+    outline: none;
+    font-size: 1rem;
+    padding: 5px;
+}
+
+#scared-page .search-bar button {
+    background: none;
+    border: none;
+    font-size: 1.2rem;
+    cursor: pointer;
+}
+
+#scared-page .fear-text {
+    position: absolute;
+    color: red;
+    font-size: 1.5rem;
+    animation: move-fear 10s linear infinite;
+}
+
+@keyframes move-fear {
+    0% {
+        transform: translate(0, 0);
+    }
+    100% {
+        transform: translate(calc(200px - 100vw), calc(200px - 100vh));
+    }
+}
+
+<!-- whatruscaredof -->
+#scared-page .sidebar {
+    position: absolute;
+    top: 0;
+    right: 0;
+    height: 100%;
+    width: 250px;
+    background-color: #ff0000;
+    transform: translateX(100%);
+    transition: transform 0.3s ease-in-out;
+}
+
+#scared-page .sidebar.open {
+    transform: translateX(0);
+}
+
+#scared-page .sidebar button {
+    position: absolute;
+    left: -40px;
+    top: 50%;
+    transform: translateY(-50%);
+    background-color: #ff0000;
+    color: #fff;
+    padding: 10px;
+    border: none;
+    cursor: pointer;
+    border-radius: 5px 0 0 5px;
+}
