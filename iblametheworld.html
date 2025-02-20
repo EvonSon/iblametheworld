@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>I Blame the World</title>
+  <!-- Import Piedra and Poppins fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Piedra&family=Poppins&display=swap" rel="stylesheet">
+
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Pierda', serif; 
+      font-weight: lighter;
+      background-color: rgb(255, 255, 255);
+      color: black;
+      overflow: hidden;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      position: relative;
+    }
+
+    svg {
+      width: 500px;
+      height: 500px;
+      position: absolute;
+      transition: transform 0.5s ease;
+      transform-origin: center center;
+    }
+
+    text {
+      font-family: 'Piedra', cursive;
+      font-size: 23px;
+      fill: black;
+      transition: transform 1s ease;
+    }
+
+    @keyframes rotate {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+
+    /* Shake effect */
+    @keyframes shake {
+      0% { transform: translateX(0); }
+      25% { transform: translateX(-5px); }
+      50% { transform: translateX(5px); }
+      75% { transform: translateX(-5px); }
+      100% { transform: translateX(5px); }
+    }
+
+    /* Sidebar styling */
+    #sidebar {
+        font-family: 'Poppins', sans-serif;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 250px;
+        height: 100%;
+        background-color: #ffffff;
+        color: #333;
+        padding: 20px;
+        display: none;
+        flex-direction: column;
+        justify-content: flex-start;
+        align-items: flex-start;
+        z-index: 10;
+        overflow-y: auto;
+        margin-top: 50px;
+    }
+
+    #sidebar a {
+        font-family: 'Poppins', sans-serif; 
+        color: #333;
+        text-decoration: none;
+        margin-bottom: 10px;
+        font-size: 14px;
+        cursor: pointer;
+    }
+
+    #sidebar a:hover {
+        text-decoration: underline;
+    }
+
+    #toggle-sidebar {
+        position: fixed;
+        top: 20px;
+        left: 20px;
+        background-color: transparent;
+        color: #333;
+        border: none;
+        font-size: 24px;
+        cursor: pointer;
+        z-index: 1000;
+        padding: 0;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        height: 20px;
+        width: 20px;
+    }
+
+    #toggle-sidebar div {
+        height: 2px;
+        background-color: #333;
+        width: 100%;
+    }
+
+    #toggle-sidebar:focus {
+        outline: none;
+    }
+
+    #song {
+      display: none;
+    }
+
+    /* Play/Pause Button styling */
+    #play-button {
+        position: fixed;
+        top: 12.5px;
+        right: 1380px; 
+        background-color: transparent;
+        color: #333;
+        outline: 333;
+        border: none;
+        font-size: 30px; 
+        cursor: pointer;
+        z-index: 1000;
+        padding: 0;
+    }
+
+    #play-button::before {
+      content: "►";
+      font-size: 30px;
+      color: #333;
+    }
+
+    #play-button.playing::before {
+      content: "❘ ❘"; 
+    }
+
+    /* Media query for mobile devices */
+    @media (max-width: 768px) {
+      #play-button {
+        right: 20px; 
+        top: 20px;   
+        font-size: 25px;   
+      }
+    }
+  </style>
+</head>
+<body>
+  <svg id="spiral-svg" viewBox="0 0 500 500"></svg>
+
+  <div id="lyrics-container">
+    <span id="dynamic-words"></span>
+  </div>
+
+  <!-- Sidebar -->
+  <div id="sidebar">
+    <a href="intro.html">Intro</a>
+    <a href="iblametheworld.html" id="blame-the-world-link">I Blame the World</a>
+    <a href="globalwarming.html">Global Warming</a>
+
+    <!-- Hidden audio element -->
+    <audio id="song">
+      <source src="i-blame-the-world.mp3" type="audio/mp3">
+    </audio>
+  </div>
+
+  <!-- Sidebar Toggle Button -->
+  <button id="toggle-sidebar">
+    <div></div>
+    <div></div>
+    <div></div>
+  </button>
+
+  <!-- Play Button -->
+  <button id="play-button"></button>
+  
+  <script>
+    const svg = document.getElementById("spiral-svg");
+    const textContent = "Why fall in love if I fall out? Why get high if eventually everyone comes down? Why play the game if it ain't fair? Why talk to God if I ain't got any proof He's even there? And why say 'hi' if I gotta say 'bye' someday? And why get close if I know my heart could break? Can't see the good in all the bad Can't make me happy when I'm sad I blame the world I'm a glass-half-empty kinda girl Can't see the silver in the lines Can't make the best of a bad time I blame the world I'm a glass-half-empty kinda girl I'm a glass-half-empty kinda girl Why paint my nails if they chip off? Why try to find myself if I know I'll end up gettin' lost? And why say 'hi' if I gotta say 'bye' someday? And why get close if I know my heart could break?".split(" ");
+
+    let pathData = "";
+    let centerX = 250, centerY = 250;
+    let radius = 20;
+    let angle = 0;
+    let angleIncrement = 20;
+    let radiusIncrement = 10;
+
+    for (let i = 0; i < textContent.length; i++) {
+      let x = centerX + radius * Math.cos(angle * Math.PI / 180);
+      let y = centerY + radius * Math.sin(angle * Math.PI / 180);
+      
+      pathData += ` L ${x} ${y}`;
+      
+      angle += angleIncrement;
+      radius += radiusIncrement / (2 * Math.PI); 
+    }
+
+    const path = document.createElementNS("http://www.w3.org/2000/svg", "path");
+    path.setAttribute("d", `M${centerX} ${centerY} ${pathData}`);
+    path.setAttribute("id", "spiralPath");
+    path.setAttribute("fill", "transparent");
+    svg.appendChild(path);
+
+    const text = document.createElementNS("http://www.w3.org/2000/svg", "text");
+    const textPath = document.createElementNS("http://www.w3.org/2000/svg", "textPath");
+    textPath.setAttribute("href", "#spiralPath");
+    textPath.textContent = textContent.join(" ");
+    text.appendChild(textPath);
+    svg.appendChild(text);
+
+    // Play music and rotate text on play button click
+    const song = document.getElementById("song");
+    const playButton = document.getElementById("play-button");
+
+    playButton.addEventListener("click", () => {
+      if (song.paused) {
+        song.play();
+        svg.style.animation = 'rotate 15s infinite linear';
+        playButton.classList.add('playing'); 
+      } else {
+        song.pause();
+        svg.style.animation = '';
+        playButton.classList.remove('playing'); 
+      }
+    });
+
+    // Sidebar toggle functionality
+    const toggleSidebarButton = document.getElementById("toggle-sidebar");
+    const sidebar = document.getElementById("sidebar");
+
+    toggleSidebarButton.addEventListener("click", () => {
+      if (sidebar.style.display === "none" || sidebar.style.display === "") {
+        sidebar.style.display = "flex"; // Show sidebar
+      } else {
+        sidebar.style.display = "none"; // Hide sidebar
+      }
+    });
+  </script>
+</body>
+</html>

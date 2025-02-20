@@ -1,0 +1,22 @@
+#lyrics-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  white-space: nowrap;
+  position: relative;
+}
+
+#scared-phrase {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-100%);
+  white-space: nowrap;
+}
+
+#dynamic-words {
+  display: inline-block;
+  text-align: left;
+  white-space: nowrap;
+  min-width: 350px; /* Make space for changing text */
+  margin-left: 10px; /* Ensure space between the texts */
+}

@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Intro</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body, html {
+            font-family: Times New Roman, serif;
+            font-size: 19px;
+            text-align: center;
+            margin: 0;
+            height: 100%;
+            overflow-x: hidden;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            background-color: #ffffff;
+        }
+
+        #lyrics-container {
+            width: 100vw;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            box-sizing: border-box;
+            overflow: hidden;
+            opacity: 1;
+            transition: opacity 3s ease-out;
+        }
+
+        #scared-phrase {
+            white-space: nowrap;
+            margin-right: 8px;
+        }
+
+        #dynamic-words {
+            display: inline-block;
+            color: #000000;
+            white-space: nowrap;
+            width: 300px;
+            text-align: left;
+            overflow: hidden;
+            transition: text-align 0.5s ease;
+        }
+
+        .center-last-lyric {
+            text-align: center;
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            padding-left:7%;
+        }
+
+        .center-losing-you {
+            text-align: left;
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            color: #000000;
+            padding-left: 7%;
+        }
+
+        #sidebar {
+            font-family: 'Poppins', sans-serif;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 250px;
+            height: 100%;
+            background-color: #ffffff;
+            color: #333;
+            padding: 20px;
+            display: none;
+            flex-direction: column;
+            justify-content: flex-start;
+            align-items: flex-start;
+            z-index: 10;
+            overflow-y: auto;
+            margin-top: 50px;
+        }
+
+        #sidebar a {
+            font-family: 'Poppins', sans-serif;
+            color: #333;
+            text-decoration: none;
+            margin-bottom: 10px;
+            font-size: 14px;
+            cursor: pointer;
+        }
+
+        #sidebar a:hover {
+            text-decoration: underline;
+        }
+
+        #toggle-sidebar {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            background-color: transparent;
+            color: #333;
+            border: none;
+            font-size: 24px;
+            cursor: pointer;
+            z-index: 1000;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            height: 20px;
+            width: 20px;
+        }
+
+        #toggle-sidebar div {
+            height: 2px;
+            background-color: #333;
+            width: 100%;
+        }
+
+        #toggle-sidebar:focus {
+            outline: none;
+        }
+
+        #play-button {
+            position: absolute;
+            top: 12.5px;
+            right: 1380px;
+            background-color: transparent;
+            color: #333;
+            border: none;
+            font-size: 30px;
+            cursor: pointer;
+            z-index: 1000;
+            padding: 0;
+        }
+
+        #play-button.paused {
+            color: #333;
+        }
+
+        #play-button:focus {
+            outline: none;
+        }
+
+        @media (max-width: 1400px) {
+            #play-button {
+                right: 270px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            #play-button {
+                right: 20px;
+                top: 20px;
+            }
+
+            #sidebar {
+                width: 200px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            #play-button {
+                right: 10px;
+                top: 10px;
+            }
+
+            #sidebar {
+                width: 150px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div id="lyrics-container">
+        <span id="scared-phrase">I'm scared of</span>
+        <span id="dynamic-words">_________________________</span>
+    </div>
+
+    <div id="sidebar">
+        <a href="intro.html" class="nav-link">Intro</a>
+        <a href="iblametheworld.html" class="nav-link">I Blame the World</a>
+        <a href="globalwarming.html" class="nav-link">Global Warming</a>
+    </div>
+
+    <button id="toggle-sidebar">
+        <div></div>
+        <div></div>
+        <div></div>
+    </button>
+
+    <button id="play-button">►</button>
+
+    <audio id="song">
+        <source src="intro-by-sasha-sloan.mp3" type="audio/mp3">
+    </audio>
+
+    <script>
+        const audio = document.getElementById("song");
+        const dynamicWords = document.getElementById("dynamic-words");
+        const scaredPhrase = document.getElementById("scared-phrase");
+        const lyricsContainer = document.getElementById("lyrics-container");
+        const sidebar = document.getElementById("sidebar");
+        const toggleSidebarButton = document.getElementById("toggle-sidebar");
+        const playButton = document.getElementById("play-button");
+
+        const lyrics = [
+            { time: 2.1, text: "a gun in a grocery store" },
+            { time: 6.5, text: "success 'cause I'm scared I'll want more" },
+            { time: 11.5, text: "a car when it's going too fast" },
+            { time: 15.4, text: "that the best times have already passed" },
+            { time: 19.8, text: "what happens after we die" },
+            { time: 24.1, text: "that my dreams won't come true" },
+            { time: 28.9, text: "But what scares me the most" },
+            { time: 33.3, text: "Yeah, what scares me the most " },
+            { time: 37.5, text: "is losing you" }
+        ];
+
+        let currentLyricIndex = 0;
+
+        audio.addEventListener("timeupdate", () => {
+            if (currentLyricIndex < lyrics.length && audio.currentTime >= lyrics[currentLyricIndex].time) {
+                let currentLyric = lyrics[currentLyricIndex].text;
+
+                // Set the scaredPhrase based on the current lyric
+                if (currentLyric === "a gun in a grocery store" ||
+                    currentLyric === "success 'cause I'm scared I'll want more" ||
+                    currentLyric === "a car when it's going too fast") {
+                    scaredPhrase.textContent = "I'm scared of"; 
+                } else if (currentLyric === "that the best times have already passed" ||
+                           currentLyric === "what happens after we die" ||
+                           currentLyric === "that my dreams won't come true") {
+                    scaredPhrase.textContent = "I'm scared of"; 
+                } else {
+                    scaredPhrase.textContent = ""; 
+                }
+
+                dynamicWords.textContent = currentLyric;
+
+                if (currentLyric === "is losing you") {
+                    dynamicWords.classList.add("center-losing-you");
+                }
+
+                currentLyricIndex++;
+
+                // Fading for the final lyric "is losing you"
+                if (currentLyric === "is losing you") {
+                    setTimeout(() => {
+                        lyricsContainer.style.opacity = 0;  
+                    }, 6000);
+                }
+            }
+        });
+
+        toggleSidebarButton.addEventListener("click", () => {
+            sidebar.style.display = sidebar.style.display === "none" || sidebar.style.display === "" ? "flex" : "none";
+        });
+
+        document.querySelectorAll(".nav-link").forEach(link => {
+            link.addEventListener("click", (event) => {
+                event.preventDefault();
+                window.location.href = event.target.getAttribute("href");
+            });
+        });
+
+        playButton.addEventListener("click", () => {
+            if (audio.paused) {
+                audio.play();
+                playButton.textContent = "❘ ❘";
+                playButton.classList.add("paused");
+            } else {
+                audio.pause();
+                playButton.textContent = "►";
+                playButton.classList.remove("paused");
+            }
+        });
+    </script>
+
+</body>
+</html>
